@@ -1,11 +1,6 @@
 'use client'
 import style from "./style";
-const topics = [
-  { id: 1, title: "HTML", body: "HTML is a markup language" },
-  { id: 2, title: "CSS", body: "CSS is a style sheet language" },
-  { id: 3, title: "JavaScript", body: "JavaScript is a scripting language" },
-];
-
+import { useState } from "react";
 
 function Header(props: { title: string, onChangeMode: () => void }) {
   return (
@@ -50,17 +45,41 @@ function Article(props: { title: string, body: string }) {
 }
 
 export default function Home() {
-  return (
-    <div className={style.div}>
-      <Header title="React" onChangeMode={()=>{
-        alert('Header');
-      }}/>
-      <Nav topics={topics} onChangeMode={(id: number)=>{
-        alert(id);
-      }}/>
-      <Article title="Welcome" body="Hello, WEB" />
-      <Article title="Hi" body="Hello, React" />
-    </div>
+  const [_mode, setMode] = useState('WELCOME');
+  const [_id, setId] = useState<number | null>(null);
+  let content = null;
+  console.log('mode', _mode);
+  const topics = [
+    { id: 1, title: "HTML", body: "HTML is a markup language" },
+    { id: 2, title: "CSS", body: "CSS is a style sheet language" },
+    { id: 3, title: "JavaScript", body: "JavaScript is a scripting language" },
+  ];
+  if(_mode ==='WELCOME'){
+    content = <Article title="Welcome" body="Hello, WEB" />
+  } else if(_mode === 'READ'){
+    let title: string | null = null;
+    let body: string | null = null;
+    for(let i = 0; i < topics.length; i++){
+      console.log(topics[i].id, _id);
+      if(topics[i].id === _id){
+        title = topics[i].title;
+        body = topics[i].body;
+      }
+    }
+    content = <Article title={title || ''} body={body || ''} />
+  }
+
+return (
+  <div className={style.div}>
+    <Header title="React" onChangeMode={()=>{
+    setMode('WELCOME');
+  }}/>
+  <Nav topics={topics} onChangeMode={(id: number)=>{
+    setMode('READ');
+    setId(id);
+  }}/>
+  {content}
+</div>
   );
 }
 
