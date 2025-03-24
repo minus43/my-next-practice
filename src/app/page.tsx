@@ -44,16 +44,38 @@ function Article(props: { title: string, body: string }) {
   );
 }
 
+function Create(props: { onCreate: (title: string, body: string) => void }) {
+  return (
+    <article className={style.article}>
+      <h2 className={style.h2}>Create</h2>
+      <form onSubmit={(event)=>{
+        event.preventDefault();
+        const form = event.currentTarget;
+        const title = (form.elements.namedItem('title') as HTMLInputElement).value;
+        const body = (form.elements.namedItem('body') as HTMLTextAreaElement).value;
+        props.onCreate(title, body);
+      }}>
+        <p className={style.p}><input className={style.input} type="text" name="title" placeholder="title" /></p>
+        <p className={style.p}><textarea className={style.textarea} name="body" placeholder="body"></textarea></p>
+        <p className={style.p}><input className={style.input} type="submit" value="Create" /></p>
+      </form>
+    </article>
+  );
+}
+
+
 export default function Home() {
   const [_mode, setMode] = useState('WELCOME');
   const [_id, setId] = useState<number | null>(null);
   let content = null;
   console.log('mode', _mode);
-  const topics = [
+  const [topics, setTopics] = useState([
     { id: 1, title: "HTML", body: "HTML is a markup language" },
     { id: 2, title: "CSS", body: "CSS is a style sheet language" },
     { id: 3, title: "JavaScript", body: "JavaScript is a scripting language" },
-  ];
+  ]);
+  const [nextId, setNextId] = useState(4);
+
   if(_mode ==='WELCOME'){
     content = <Article title="Welcome" body="Hello, WEB" />
   } else if(_mode === 'READ'){
@@ -67,19 +89,32 @@ export default function Home() {
       }
     }
     content = <Article title={title || ''} body={body || ''} />
-  }
+  } else if(_mode === 'CREATE'){
+    content = <Create onCreate={(title: string, body: string)=>{
+      const newTopic = {id: nextId, title: title, body: body};
+      topics.push(newTopic);
+      setTopics(topics);
+      setMode('READ');
+      setId(nextId);
+      setNextId(nextId + 1);
+    }}/>
+    }
 
 return (
   <div className={style.div}>
     <Header title="React" onChangeMode={()=>{
-    setMode('WELCOME');
-  }}/>
-  <Nav topics={topics} onChangeMode={(id: number)=>{
-    setMode('READ');
-    setId(id);
-  }}/>
-  {content}
-</div>
+      setMode('WELCOME');
+    }}/>
+    <Nav topics={topics} onChangeMode={(id: number)=>{
+      setMode('READ');
+      setId(id);
+    }}/>
+    {content}
+    <a href="/create" onClick={(event)=>{
+      event.preventDefault();
+      setMode('CREATE');
+    }}>Create</a>
+  </div>
   );
 }
 

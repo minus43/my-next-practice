@@ -8,7 +8,10 @@ const style = {
   li: "my-2",
   a: "hover:underline",
   article: "prose prose-slate max-w-none w-full mx-auto p-6 dark:prose-invert",
-  h2: "text-2xl font-semibold mb-4"
+  h2: "text-2xl font-semibold mb-4",
+  input: "border border-gray-300 rounded-md p-2",
+  textarea: "border border-gray-300 rounded-md p-2",
+  p: "my-2"
 };
 
 export default style;
