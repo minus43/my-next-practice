@@ -11,7 +11,8 @@ const style = {
   h2: "text-2xl font-semibold mb-4",
   input: "border border-gray-300 rounded-md p-2",
   textarea: "border border-gray-300 rounded-md p-2",
-  p: "my-2"
+  p: "my-2",
+  button: "bg-blue-500 text-white px-4 py-2 rounded-md"
 };
 
 export default style;

@@ -113,10 +113,22 @@ export default function Home() {
       }
     }
     content = <Article title={title || ''} body={body || ''} />
-    contextControl = <li><a className={style.a} href={`/update/`+_id} onClick={(event)=>{
-      event.preventDefault();
-      setMode('UPDATE');
-    }}>Update</a></li>
+    contextControl = <>
+      <li><a className={style.a} href={`/update/`+_id} onClick={(event)=>{
+        event.preventDefault();
+        setMode('UPDATE');
+      }}>Update</a></li>
+      <li><input className={style.button} type="button" value="Delete" onClick={(event)=>{
+        const newTopics = [];
+        for(let i = 0; i < topics.length; i++){
+          if(topics[i].id !== _id){
+            newTopics.push(topics[i]);
+          }
+        }
+        setTopics(newTopics);
+        setMode('WELCOME');
+      }}/></li>
+    </>
   } else if(_mode === 'CREATE'){
     content = <Create onCreate={(title: string, body: string)=>{
       const newTopic = {id: nextId, title: title, body: body};
